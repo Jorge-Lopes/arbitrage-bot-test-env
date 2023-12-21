@@ -1,9 +1,10 @@
 import { sendWalletAction } from "./commands.js";
-import { AuctionerrKeyword } from "./constants.js";
+import { AuctionerrKeyword, TimerKeyword } from "./constants.js";
 
 const OFFER_ID = {
     Deposit: `auction-deposit-${Date.now()}`,
-    Bid: `auction-bid${Date.now()}`,
+    Bid: `auction-bid-${Date.now()}`,
+    Timer: `timer-${Date.now()}`,
 };
 
 const OfferSpecs = {
@@ -44,6 +45,16 @@ const OfferSpecs = {
                 Collateral: collateralAmount
             }
         }
+    }),
+    Timer: ({ timestamp }) => ({
+        id: OFFER_ID.Timer,
+        invitationSpec: {
+            source: 'agoricContract',
+            instancePath: [TimerKeyword],
+            callPipe: [['makeTimerInvitation']],
+        },
+        proposal: {},
+        offerArgs: { timestamp },
     }),
 };
 harden(OfferSpecs);
