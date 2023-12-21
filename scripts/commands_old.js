@@ -77,14 +77,15 @@ const agd = {
         ].join(" "),
     },
     gov: {
-      submit: (coreList, params) =>
+      submit: (params) =>
         [
           agdBin,
           "tx",
           "gov",
           "submit-proposal",
           "swingset-core-eval",
-          ...coreList,
+          ...params.coreEvalList,
+          ,
           "--title",
           params.title,
           "--description",
@@ -139,7 +140,7 @@ const agops = {
         `'${params.offerId}'`,
         "fakeATOM.USD",
         ">",
-        `'offer-${params.offerId}-w${params.oracleIndex}.json'`,
+        `'offer-${params.offerId}-oracle${params.oracleIndex}.json'`,
       ].join(" "),
     pushPriceRound: (params) =>
       [
@@ -153,7 +154,7 @@ const agops = {
         "--oracleAdminAcceptOfferId",
         `'${params.oracleAdminAcceptOfferId}'`,
         ">",
-        `'offer-${params.offerId}-w${params.oracleIndex}.json'`,
+        `'price-offer-${params.offerId}-oracle${params.oracleIndex}.json'`,
       ].join(" "),
   },
 };
@@ -191,15 +192,6 @@ const queryProposals = (rpc) => {
   return proposalsParse.proposals.slice(-1);
 };
 
-const spreadList = (list) => {
-  let result = [];
-  for (let item of list) {
-    let [permit, core_eval] = item;
-    result.push(permit, core_eval);
-  }
-  return result;
-};
-
 const publishContract = (bundle, params) => {
   console.log("Publish contract");
   execute(agd.tx.swingset.publish(bundle, params), {
@@ -208,10 +200,9 @@ const publishContract = (bundle, params) => {
   console.log("Success");
 };
 
-const submitCoreEval = (list, params) => {
+const submitCoreEval = (params) => {
   console.log("Submitting core-eval");
-  const coreList = spreadList(list);
-  execute(agd.tx.gov.submit(coreList, params), {
+  execute(agd.tx.gov.submit(params), {
     stdio: "pipe",
   });
   console.log("Success");
@@ -250,7 +241,7 @@ const oraclePushPrice = (params) => {
 
 const oracleSendOffer = (params) => {
   console.log("Oracle send offer");
-  execute(agoric.wallet(params.from, params.path));
+  execute(agoric.wallet(params.address, params.path));
   console.log("Success");
 };
 
