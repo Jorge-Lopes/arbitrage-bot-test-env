@@ -9,15 +9,17 @@ const Params = harden({
   description: "fakeAtomFaucet_core_eval",
 });
 
-const CollateralKeyword = 'ATOM';
-const BidKeyword = 'IST';
-const AuctionerrKeyword = 'fakeAuctioneer';
-const TimerKeyword = 'manualTimer';
+const CollateralKeyword = "FakeATOM";
+const BidKeyword = "IST";
+const AuctioneerKeyword = "fakeAuctioneer";
+const TimerKeyword = "manualTimer";
+const AtomFaucetKeyword = "fakeATOMFaucet";
 
 export {
   Params,
   CollateralKeyword,
   BidKeyword,
-  AuctionerrKeyword,
+  AuctioneerKeyword,
   TimerKeyword,
+  AtomFaucetKeyword
 };
