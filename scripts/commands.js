@@ -48,6 +48,26 @@ const agd = {
           params.gas,
           "-b block",
           "--yes",
+          ...[GLOBAL_OPTIONS],
+        ],
+        walletAction: (offer, params) => [
+            'tx',
+            'swingset',
+            'wallet-action',
+            offer,
+            '--from',
+            params.key,
+            '--allow-spend',
+            '--node',
+            params.rpc,
+            "--chain-id",
+            params.chain_id,
+            "--gas",
+            params.gas,
+            "--yes",
+            '--fees=10000ubld',
+            '--gas-adjustment=1.2',
+            ...[GLOBAL_OPTIONS]
         ],
     },
     gov: {
@@ -68,13 +88,13 @@ const agd = {
           params.key,
           "--chain-id",
           params.chain_id,
-          "--keyring-backend=test",
           "--gas-adjustment",
           params.adjustment,
           "--gas",
           params.gas,
           "-b block",
           "--yes",
+          ...[GLOBAL_OPTIONS],
         ],
 
       vote: (proposal_id, params) =>
@@ -88,13 +108,13 @@ const agd = {
           params.key,
           "--chain-id",
           params.chain_id,
-          "--keyring-backend=test",
           "--gas-adjustment",
           params.adjustment,
           "--gas",
           params.gas,
           "-b block",
           "--yes",
+          ...[GLOBAL_OPTIONS],
         ],
     },
   },
@@ -157,6 +177,10 @@ const vote = (params) => {
   return sendTx(agd.tx.gov.vote(proposal_id, params));
 };
 
+const sendWalletAction = (offer, params) => {
+  return sendTx(agd.tx.swingset.walletAction(offer, params));
+};
+
 export {
   agd,
   execute,
@@ -164,4 +188,5 @@ export {
   publishContract,
   submitCoreEval,
   vote,
+  sendWalletAction,
 };
