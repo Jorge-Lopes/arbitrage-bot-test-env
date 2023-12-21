@@ -1,15 +1,35 @@
 # arbitrage-bot-test-env
 
-## Install bundle
-
-agd tx swingset install-bundle @/workspace/bundles/asset-faucet/b1-bc90824909ce251e1c1647c8348fcac80bc49fc240af2c116ea0a6f4e289090f650812c1fa4c770bc5e10e6ec5926efebed9ec95d302620f51aa5e9443f9c694.json --from=gov1  --chain-id=agoriclocal --node=http://0.0.0.0:26657 --keyring-backend=test --gas=auto --yes -b block
-
-### Error message
-
-raw_log: 'controller refused message admission: 0uist is smaller than 1289800000uist:
-  insufficient funds: mempool is full'
-
 
 ## Provision account
 
-ACCT_ADDR=agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx FUNDS=9999000000ubld,9999000000uist make fund-acct
+make TO=agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx mint-ist
+
+## full cycle for asset faucet
+
+agd tx swingset install-bundle @/workspace/bundles/auctioneer/b1-9d4bdaac3f8b3e2b6ba0a08c9c0f9f6a4017caa525d36876002bcfc23360858b9efb1d5e78d8e3a0bee6b87a5811159462c364a2f406ebab7d9e3317d9ad6a99.json --from=gov1 --chain-id=agoriclocal --node=http://0.0.0.0:26657 --keyring-backend=test --gas=auto --yes -b block
+
+agd tx swingset install-bundle @/workspace/bundles/asset-faucet/b1-d945ef0f832f09296f0d3fb8f21c2df0deb1a52178a49fe0aad945384555bc510f7fa747ab9a2e0183d45c9e2088c51050fcfd6cb3c0ef040c90518f9b046ac1.json --from=gov1 --chain-id=agoriclocal --node=http://0.0.0.0:26657 --keyring-backend=test --gas=auto --yes -b block
+
+agd tx gov submit-proposal swingset-core-eval \
+ /workspace/core-eval/startAssetFaucet-permit.json \
+ /workspace/core-eval/startAssetFaucet.js \
+--title="fakeAtomFaucet" --description="fakeAtomFaucet_core_eval" --deposit=10000000ubld \
+ --from validator --chain-id=agoriclocal --keyring-backend=test --gas=auto --yes -b block
+
+agd tx gov vote 9 yes --from=agoric1499h5lwqgqj0mrwkpkjttppvtrzs5raxayf55n --keyring-backend=test --chain-id=agoriclocal --gas=auto --gas-adjustment=1.2 --yes -b block
+
+
+## full cycle for timer
+
+agd tx swingset install-bundle @/workspace/bundles/auctioneer/b1-a71e2df8c1d9c8eeadcf79bbbd3a25d84e6f10d1db0f5fce2bf705a625f6609f6a33ab8553f01565dd438cbfb4cd52be27b666d91900933908d2974cad32186b.json --from=gov1 --chain-id=agoriclocal --node=http://0.0.0.0:26657 --keyring-backend=test --gas=auto --yes -b block
+
+agd tx swingset install-bundle @/workspace/bundles/manual-timer/b1-dbe02098bd20f6ed2e5160124a888741b36521ab3cc4d32cf7cbe75bb33d9dcf0fb8f2ace2d5e60f34dbf74029b86fd0520fb1b41801e6dc9949ad32c3326d58.json --from=gov1 --chain-id=agoriclocal --node=http://0.0.0.0:26657 --keyring-backend=test --gas=auto --yes -b block
+
+agd tx gov submit-proposal swingset-core-eval \
+ /workspace/core-eval/startManualTimerFaucet-permit.json \
+ /workspace/core-eval/startManualTimerFaucet.js \
+--title="startManualTimerFaucet" --description="startManualTimerFaucet_core_eval" --deposit=10000000ubld \
+ --from validator --chain-id=agoriclocal --keyring-backend=test --gas=auto --yes -b block
+
+agd tx gov vote 10 yes --from=validator --keyring-backend=test --chain-id=agoriclocal --gas=auto --gas-adjustment=1.2 --yes -b block
