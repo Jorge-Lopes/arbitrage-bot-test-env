@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@agoric/casting": "^0.4.3-u13.0",
+    "@agoric/smart-wallet": "^0.5.4-u13.0",
+    "@endo/promise-kit": "^1.0.1"
   }
 }

@@ -1,52 +1,38 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
+import { pollTx } from '../_agstate/yarn-links/agoric/src/lib/chain.js';
 
 const agdBin = "agd";
-
-const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+const sleep = ms => new Promise(res => setTimeout(res, ms));
 const chainConfig = {
-  chainID: "agoriclocal",
-  rpc: "http://localhost:26657",
+  chainID: 'agoriclocal',
+  rpc: 'http://localhost:26657'
 };
 
-const GLOBAL_OPTIONS = ["--output=json"];
-
-const SIGN_BROADCAST_OPTS = (rpc, chainID) => [
-  "--keyring-backend=test",
-  "--chain-id",
-  chainID,
-  "--gas=auto",
-  "--gas-adjustment=1.2",
-  "--yes",
-  "--node",
-  rpc,
-  "--output json",
-];
+const GLOBAL_OPTIONS = ["--keyring-backend=test", "--output=json"];
 
 const agd = {
   keys: {
     add: (name) =>
-      [agdBin, "keys", "add", name, "--recover", ...GLOBAL_OPTIONS].join(" "),
+      ["keys", "add", name, "--recover", ...GLOBAL_OPTIONS],
   },
   query: {
     gov: {
       proposals: (rpc) =>
         [
-          agdBin,
           "query",
           "gov",
           "proposals",
           "--node",
           rpc,
           ...GLOBAL_OPTIONS,
-        ].join(" "),
+        ],
     },
   },
   tx: {
     swingset: {
       publish: (bundle, params) =>
         [
-          agdBin,
           "tx",
           "swingset",
           "install-bundle",
@@ -62,24 +48,31 @@ const agd = {
           params.gas,
           "-b block",
           "--yes",
-        ].join(" "),
-
-      walletAction: (from) =>
-        [
-          agdBin,
-          "tx",
-          "swingset",
-          "wallet-action",
-          `--from=${from}`,
-          "--allow-spend",
-          ...SIGN_BROADCAST_OPTS("http://0.0.0.0:26657", "agoriclocal"),
-          "--offer",
-        ].join(" "),
+          ...[GLOBAL_OPTIONS],
+        ],
+        walletAction: (offer, params) => [
+            'tx',
+            'swingset',
+            'wallet-action',
+            offer,
+            '--from',
+            params.key,
+            '--allow-spend',
+            '--node',
+            params.rpc,
+            "--chain-id",
+            params.chain_id,
+            "--gas",
+            params.gas,
+            "--yes",
+            '--fees=10000ubld',
+            '--gas-adjustment=1.2',
+            ...[GLOBAL_OPTIONS]
+        ],
     },
     gov: {
       submit: (coreList, params) =>
         [
-          agdBin,
           "tx",
           "gov",
           "submit-proposal",
@@ -95,18 +88,17 @@ const agd = {
           params.key,
           "--chain-id",
           params.chain_id,
-          "--keyring-backend=test",
           "--gas-adjustment",
           params.adjustment,
           "--gas",
           params.gas,
           "-b block",
           "--yes",
-        ].join(" "),
+          ...[GLOBAL_OPTIONS],
+        ],
 
       vote: (proposal_id, params) =>
         [
-          agdBin,
           "tx",
           "gov",
           "vote",
@@ -116,64 +108,30 @@ const agd = {
           params.key,
           "--chain-id",
           params.chain_id,
-          "--keyring-backend=test",
           "--gas-adjustment",
           params.adjustment,
           "--gas",
           params.gas,
           "-b block",
           "--yes",
-        ].join(" "),
+          ...[GLOBAL_OPTIONS],
+        ],
     },
   },
 };
 
-const agops = {
-  oracle: {
-    accept: (params) =>
-      [
-        "agops",
-        "oracle",
-        "accept",
-        "--offerId",
-        `'${params.offerId}'`,
-        "fakeATOM.USD",
-        ">",
-        `'offer-${params.offerId}-w${params.oracleIndex}.json'`,
-      ].join(" "),
-    pushPriceRound: (params) =>
-      [
-        "agops",
-        "oracle",
-        "pushPriceRound",
-        "--price",
-        `'${params.price}'`,
-        "--roundId",
-        `'${params.roundId}'`,
-        "--oracleAdminAcceptOfferId",
-        `'${params.oracleAdminAcceptOfferId}'`,
-        ">",
-        `'offer-${params.offerId}-w${params.oracleIndex}.json'`,
-      ].join(" "),
-  },
+const execute = (args, options = {}) => {
+  return execFileSync(agdBin, args, { encoding: "utf-8", ...options });
 };
 
-const agoric = {
-  wallet: (params) =>
-    [
-      "agoric",
-      "wallet",
-      "send",
-      `--from`,
-      params.from,
-      "--keyring-backend=test",
-      "--offer",
-      params.path,
-    ].join(" "),
-};
-
-const execute = (cmd, options = {}) => {
-  return execSync(cmd, { stdio: "inherit", encoding: "utf-8", ...options });
+const sendTx = (args, options = {}) => {
+  const tx = execFileSync(agdBin, args, { encoding: "utf-8", ...options });
+  const { txhash } = JSON.parse(tx);
+  return pollTx(txhash, {
+      execFileSync,
+      delay: sleep,
+      rpcAddrs: [chainConfig.rpc],
+  });
 };
 
 const recoverFromMnemonic = (name) => {
@@ -202,69 +160,33 @@ const spreadList = (list) => {
 
 const publishContract = (bundle, params) => {
   console.log("Publish contract");
-  execute(agd.tx.swingset.publish(bundle, params), {
-    stdio: "pipe",
-  });
   console.log("Success");
+  return sendTx(agd.tx.swingset.publish(bundle, params));
 };
 
 const submitCoreEval = (list, params) => {
   console.log("Submitting core-eval");
   const coreList = spreadList(list);
-  execute(agd.tx.gov.submit(coreList, params), {
-    stdio: "pipe",
-  });
-  console.log("Success");
+  return sendTx(agd.tx.gov.submit(coreList, params));
 };
 
 const vote = (params) => {
   console.log("Vote on proposal");
   const proposal = queryProposals(params.rpc);
   const proposal_id = proposal[0].proposal_id;
-  execute(agd.tx.gov.vote(proposal_id, params), {
-    stdio: "pipe",
-  });
-  console.log("Success");
+  return sendTx(agd.tx.gov.vote(proposal_id, params));
 };
 
-const sendWalletAction = (offer, from) => {
-  const tx = execute(agd.tx.swingset.walletAction(offer, from));
-  return JSON.parse(tx);
-};
-
-const oracleAccept = (params) => {
-  console.log("Accept Oracle");
-  execute(agops.oracle.accept(params), {
-    stdio: "pipe",
-  });
-  console.log("Success");
-};
-
-const oraclePushPrice = (params) => {
-  console.log("Oracle Push Price Round");
-  execute(agops.oracle.pushPriceRound(params), {
-    stdio: "pipe",
-  });
-  console.log("Success");
-};
-
-const oracleSendOffer = (params) => {
-  console.log("Oracle send offer");
-  execute(agoric.wallet(params.from, params.path));
-  console.log("Success");
+const sendWalletAction = (offer, params) => {
+  return sendTx(agd.tx.swingset.walletAction(offer, params));
 };
 
 export {
   agd,
   execute,
   recoverFromMnemonic,
-  queryProposals,
   publishContract,
   submitCoreEval,
   vote,
   sendWalletAction,
-  oracleAccept,
-  oracleSendOffer,
-  oraclePushPrice,
-  sleep,
 };
