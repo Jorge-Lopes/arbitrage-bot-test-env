@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 
 const agdBin = "agd";
 
-const GLOBAL_OPTIONS = ["--keyring-backend=test", "--output=json"];
+const GLOBAL_OPTIONS = [ "--output=json"];
 
 const SIGN_BROADCAST_OPTS = [
   "--keyring-backend=test",
@@ -167,6 +167,7 @@ export {
   agd,
   execute,
   recoverFromMnemonic,
+  queryProposals,
   publishContract,
   submitCoreEval,
   vote,
