@@ -1,44 +1,38 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
+import { pollTx } from '../_agstate/yarn-links/agoric/src/lib/chain.js';
 
 const agdBin = "agd";
+const sleep = ms => new Promise(res => setTimeout(res, ms));
+const chainConfig = {
+  chainID: 'agoriclocal',
+  rpc: 'http://localhost:26657'
+};
 
 const GLOBAL_OPTIONS = [ "--output=json"];
-
-const SIGN_BROADCAST_OPTS = [
-  "--keyring-backend=test",
-  "--gas=auto",
-  "--fees=80000ubld",
-  "--gas-adjustment=1.2",
-  "--yes",
-  "--output",
-  "json",
-];
 
 const agd = {
   keys: {
     add: (name) =>
-      [agdBin, "keys", "add", name, "--recover", ...GLOBAL_OPTIONS].join(" "),
+      ["keys", "add", name, "--recover", ...GLOBAL_OPTIONS],
   },
   query: {
     gov: {
       proposals: (rpc) =>
         [
-          agdBin,
           "query",
           "gov",
           "proposals",
           "--node",
           rpc,
           ...GLOBAL_OPTIONS,
-        ].join(" "),
+        ],
     },
   },
   tx: {
     swingset: {
       publish: (bundle, params) =>
         [
-          agdBin,
           "tx",
           "swingset",
           "install-bundle",
@@ -54,12 +48,11 @@ const agd = {
           params.gas,
           "-b block",
           "--yes",
-        ].join(" "),
+        ],
     },
     gov: {
       submit: (coreList, params) =>
         [
-          agdBin,
           "tx",
           "gov",
           "submit-proposal",
@@ -82,11 +75,10 @@ const agd = {
           params.gas,
           "-b block",
           "--yes",
-        ].join(" "),
+        ],
 
       vote: (proposal_id, params) =>
         [
-          agdBin,
           "tx",
           "gov",
           "vote",
@@ -103,13 +95,23 @@ const agd = {
           params.gas,
           "-b block",
           "--yes",
-        ].join(" "),
+        ],
     },
   },
 };
 
-const execute = (cmd, options = {}) => {
-  return execSync(cmd, { stdio: "inherit", encoding: "utf-8", ...options });
+const execute = (args, options = {}) => {
+  return execFileSync(agdBin, args, { encoding: "utf-8", ...options });
+};
+
+const sendTx = (args, options = {}) => {
+  const tx = execFileSync(agdBin, args, { encoding: "utf-8", ...options });
+  const { txhash } = JSON.parse(tx);
+  return pollTx(txhash, {
+      execFileSync,
+      delay: sleep,
+      rpcAddrs: [chainConfig.rpc],
+  });
 };
 
 const recoverFromMnemonic = (name) => {
@@ -138,29 +140,21 @@ const spreadList = (list) => {
 
 const publishContract = (bundle, params) => {
   console.log("Publish contract");
-  execute(agd.tx.swingset.publish(bundle, params), {
-    stdio: "pipe",
-  });
   console.log("Success");
+  return sendTx(agd.tx.swingset.publish(bundle, params));
 };
 
 const submitCoreEval = (list, params) => {
   console.log("Submitting core-eval");
   const coreList = spreadList(list);
-  execute(agd.tx.gov.submit(coreList, params), {
-    stdio: "pipe",
-  });
-  console.log("Success");
+  return sendTx(agd.tx.gov.submit(coreList, params));
 };
 
 const vote = (params) => {
   console.log("Vote on proposal");
   const proposal = queryProposals(params.rpc);
   const proposal_id = proposal[0].proposal_id;
-  execute(agd.tx.gov.vote(proposal_id, params), {
-    stdio: "pipe",
-  });
-  console.log("Success");
+  return sendTx(agd.tx.gov.vote(proposal_id, params));
 };
 
 export {

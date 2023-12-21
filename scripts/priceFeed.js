@@ -1,6 +1,6 @@
 import { publishContract, submitCoreEval, vote } from "./commands.js";
 
-const main = () => {
+const main = async () => {
   const params = {
     rpc: "http://0.0.0.0:26657",
     chain_id: "agoriclocal",
@@ -23,4 +23,4 @@ const main = () => {
   vote(params);
 };
 
-main();
+main().then(() => console.log('Success')).catch(err => console.error(err));
