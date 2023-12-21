@@ -47,5 +47,5 @@ gov-q:
 
 ATOM_AMOUNT=9000000000000000
 
-sendAsset :
+sendAsset:
 	agd tx bank send ${VALIDATOR} $(ACCT_ADDR) ${ATOM_AMOUNT}ibc/BA313C4A19DFBF943586C0387E6B11286F9E416B4DD27574E6909CABE0E342FA --chain-id agoriclocal --keyring-backend=test -b block -y

@@ -1,6 +1,5 @@
 # arbitrage-bot-test-env
 
-
 ## Provision account
 
 make TO=agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx mint-ist
@@ -19,7 +18,6 @@ agd tx gov submit-proposal swingset-core-eval \
 
 agd tx gov vote 9 yes --from=agoric1499h5lwqgqj0mrwkpkjttppvtrzs5raxayf55n --keyring-backend=test --chain-id=agoriclocal --gas=auto --gas-adjustment=1.2 --yes -b block
 
-
 ## full cycle for timer
 
 agd tx swingset install-bundle @/workspace/bundles/auctioneer/b1-a71e2df8c1d9c8eeadcf79bbbd3a25d84e6f10d1db0f5fce2bf705a625f6609f6a33ab8553f01565dd438cbfb4cd52be27b666d91900933908d2974cad32186b.json --from=gov1 --chain-id=agoriclocal --node=http://0.0.0.0:26657 --keyring-backend=test --gas=auto --yes -b block
@@ -33,3 +31,29 @@ agd tx gov submit-proposal swingset-core-eval \
  --from validator --chain-id=agoriclocal --keyring-backend=test --gas=auto --yes -b block
 
 agd tx gov vote 10 yes --from=validator --keyring-backend=test --chain-id=agoriclocal --gas=auto --gas-adjustment=1.2 --yes -b block
+
+## oracle gov1
+
+agops oracle accept --offerId 1 --pair fakeATOM.USD > offer-1-w1.json
+
+agoric wallet send --from agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx --offer offer-1-w1.json --keyring-backend=test
+
+agops oracle pushPriceRound --price 10 --roundId 1 --oracleAdminAcceptOfferId 1 > price-offer-1-w1.json
+
+agoric wallet send --from agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx --offer price-offer-1-w1.json --keyring-backend=test
+
+## oracle gov2
+
+# submit a price from wallet 2
+
+agops oracle accept --offerId 1 --pair fakeATOM.USD > offer-1-w2.json
+
+agoric wallet send --from agoric1aap7m84dt0rwhhfw49d4kv2gqetzl56vn8aaxj --offer offer-1-w2.json --keyring-backend=test
+
+agops oracle pushPriceRound --price 10 --roundId 1 --oracleAdminAcceptOfferId 1 > price-offer-1-w2.json
+
+agoric wallet send --from agoric1aap7m84dt0rwhhfw49d4kv2gqetzl56vn8aaxj --offer price-offer-1-w2.json --keyring-backend=test
+
+# verify price feed
+
+agoric follow :published.priceFeed.stATOM-USD_price_feed

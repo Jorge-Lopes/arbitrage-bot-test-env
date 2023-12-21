@@ -1,4 +1,4 @@
-import { publishContract, submitCoreEval, vote } from "./commands.js";
+import { publishContract } from "./commands.js";
 
 const main = () => {
   const params = {
@@ -24,14 +24,13 @@ const main = () => {
   const bundleManifestPrice =
     "@/workspace/bundles/price-feed/b1-80e6fe68b299c82c2d26802c312bc37966a559f7b28f87d058887a79a9db48ad97da2240e71e3f98986071da8fc3c5d02358bec577b17a89cee2b1cb3cd23958.json";
 
-//   publishContract(bundleContractAsset, params);
-//   publishContract(bundleManifestAsset, params);
-//   publishContract(bundleContractTimer, params);
-//   publishContract(bundleManifestTimer, params);
-//   publishContract(bundleContractAuctioneer, params);
+  publishContract(bundleContractAsset, params);
+  publishContract(bundleManifestAsset, params);
+  publishContract(bundleContractTimer, params);
+  publishContract(bundleManifestTimer, params);
+  publishContract(bundleContractAuctioneer, params);
   publishContract(bundleManifestAuctioneer, params);
-//   publishContract(bundleManifestPrice, params);
-
+  publishContract(bundleManifestPrice, params);
 };
 
-main();
+main().then(() => console.log('Success')).catch(err => console.error(err));
