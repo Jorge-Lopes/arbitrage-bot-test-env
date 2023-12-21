@@ -1,4 +1,4 @@
-import { publishContract } from "./commands.js";
+import { publishContract } from "./commands_old.js";
 
 const main = () => {
   const params = {
@@ -20,7 +20,7 @@ const main = () => {
   const bundleContractAuctioneer =
     "@/workspace/bundles/auctioneer/b1-a71e2df8c1d9c8eeadcf79bbbd3a25d84e6f10d1db0f5fce2bf705a625f6609f6a33ab8553f01565dd438cbfb4cd52be27b666d91900933908d2974cad32186b.json";
   const bundleManifestAuctioneer =
-    "@/workspace/bundles/auctioneer/b1-9d4bdaac3f8b3e2b6ba0a08c9c0f9f6a4017caa525d36876002bcfc23360858b9efb1d5e78d8e3a0bee6b87a5811159462c364a2f406ebab7d9e3317d9ad6a99.json";
+    "@/workspace/bundles/auctioneer/b1-6c696c6288f674a3844b15df0f1a3bbf4d270fdf7b484b0ef142c17040ced3170c46421c97fd7b6608719f7b0a1102b5888acd0b7a5d3c448d20b9291d62afe4.json";
   const bundleManifestPrice =
     "@/workspace/bundles/price-feed/b1-80e6fe68b299c82c2d26802c312bc37966a559f7b28f87d058887a79a9db48ad97da2240e71e3f98986071da8fc3c5d02358bec577b17a89cee2b1cb3cd23958.json";
 
