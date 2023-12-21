@@ -1,4 +1,5 @@
 import { sendWalletAction } from "./commands.js";
+import { AuctionerrKeyword } from "./constants.js";
 
 const OFFER_ID = {
     Deposit: `auction-deposit-${Date.now()}`,
@@ -10,7 +11,7 @@ const OfferSpecs = {
         id: OFFER_ID.Bid,
         invitationSpec: {
             source: 'agoricContract',
-            instancePath: ['auctioneer'],
+            instancePath: [AuctionerrKeyword],
             callPipe: [['makeBidInvitation', [maxColAmount.brand]]],
         },
         proposal: {
@@ -30,6 +31,19 @@ const OfferSpecs = {
             maxBuy: maxColAmount,
             offerPrice: price,
         },
+    }),
+    Deposit: ({ collateralAmount }) => ({
+        id: OFFER_ID.Deposit,
+        invitationSpec: {
+            source: 'agoricContract',
+            instancePath: [AuctionerrKeyword],
+            callPipe: [['makeDepositInvitation']],
+        },
+        proposal: {
+            give: {
+                Collateral: collateralAmount
+            }
+        }
     }),
 };
 harden(OfferSpecs);

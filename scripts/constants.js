@@ -11,9 +11,11 @@ const Params = harden({
 
 const CollateralKeyword = 'ATOM';
 const BidKeyword = 'IST';
+const AuctionerrKeyword = 'fakeAuctioneer';
 
 export {
   Params,
   CollateralKeyword,
   BidKeyword,
+  AuctionerrKeyword,
 };
