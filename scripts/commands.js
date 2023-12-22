@@ -17,6 +17,7 @@ const GLOBAL_OPTIONS = ["--keyring-backend=test", "--output=json"];
 const agd = {
   keys: {
     add: (name) => ["keys", "add", name, "--recover", ...GLOBAL_OPTIONS],
+    show: (name) => ["keys", "show", name, ...GLOBAL_OPTIONS],
   },
   query: {
     gov: {
@@ -66,6 +67,23 @@ const agd = {
         "--fees=10000ubld",
         "--gas-adjustment=1.2",
         ...[GLOBAL_OPTIONS],
+      ],
+      provisionOne: (params, address) => [
+        "tx",
+        "swingset",
+        "provision-one",
+        "--from",
+        "validator",
+        "--node",
+        params.rpc,
+        "--chain-id",
+        params.chain_id,
+        "--keyring-backend=test",
+        "--output=json",
+        "--yes",
+        "my-wallet",
+        address,
+        "SMART_WALLET"
       ],
     },
     gov: {
@@ -120,6 +138,7 @@ const execute = (args, options = {}) => {
 
 const sendTx = (args, options = {}) => {
   const tx = execFileSync(agdBin, args, { encoding: "utf-8", ...options });
+  console.log({tx})
   const { txhash } = JSON.parse(tx);
   return pollTx(txhash, {
     execFileSync,
@@ -165,6 +184,13 @@ const sendWalletAction = (offer, params) => {
   return sendTx(agd.tx.swingset.walletAction(offer, params));
 };
 
+const provisionOne = (name, params) => {
+  const all = execute(agd.keys.show(name));
+  const { address } = JSON.parse(all);
+  console.log("Address: ", address);
+  return sendTx(agd.tx.swingset.provisionOne(params, address));
+};
+
 export {
   agd,
   execute,
@@ -173,4 +199,5 @@ export {
   submitCoreEval,
   vote,
   sendWalletAction,
+  provisionOne,
 };

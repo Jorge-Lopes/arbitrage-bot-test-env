@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { readFileSync } from "fs";
 
 const agdBin = "agd";
+const agopsBin = "/usr/src/agoric-sdk/node_modules/.bin/agops";
 
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 const chainConfig = {
@@ -133,7 +134,7 @@ const agops = {
   oracle: {
     accept: (params) =>
       [
-        "agops",
+        agopsBin,
         "oracle",
         "accept",
         "--offerId",
@@ -142,9 +143,10 @@ const agops = {
         ">",
         `'offer-${params.offerId}-oracle${params.oracleIndex}.json'`,
       ].join(" "),
+
     pushPriceRound: (params) =>
       [
-        "agops",
+        agopsBin,
         "oracle",
         "pushPriceRound",
         "--price",
@@ -166,7 +168,7 @@ const agoric = {
       "wallet",
       "send",
       `--from`,
-      params.from,
+      params.address,
       "--keyring-backend=test",
       "--offer",
       params.path,
@@ -241,7 +243,7 @@ const oraclePushPrice = (params) => {
 
 const oracleSendOffer = (params) => {
   console.log("Oracle send offer");
-  execute(agoric.wallet(params.address, params.path));
+  execute(agoric.wallet(params));
   console.log("Success");
 };
 
