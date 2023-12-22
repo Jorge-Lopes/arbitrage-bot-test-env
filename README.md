@@ -45,7 +45,7 @@ agoric wallet send --from agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx --offer 
 oracle gov2:
 
 ```shell
-agops oracle accept --offerId 1 --pair fakeATOM.USD > /price-feed-offers/offer-1-w2.json
+agops oracle accept --offerId 1 --pair fakeATOM.USD > offer-1-w2.json
 
 agoric wallet send --from agoric1aap7m84dt0rwhhfw49d4kv2gqetzl56vn8aaxj --offer offer-1-w2.json --keyring-backend=test
 
