@@ -1,6 +1,7 @@
-import { submitCoreEval, vote } from "./commands_old.js";
+import "../installSesLockdown.js";
+import { submitCoreEval, vote } from "./commands.js";
 
-const main = async () => {
+const deployContracts = async () => {
   const params = {
     rpc: "http://0.0.0.0:26657",
     chain_id: "agoriclocal",
@@ -50,17 +51,29 @@ const main = async () => {
     ...params,
   };
 
-  submitCoreEval(assetFaucet);
-  vote(params);
+  await submitCoreEval(assetFaucet);
+  let info = await vote(params);
+  console.log("Success", info);
 
-  submitCoreEval(manualTimer);
-  vote(params);
+  await submitCoreEval(manualTimer);
+  info = await vote(params);
+  console.log("Success", info);
 
-  submitCoreEval(atomOracle);
-  vote(params);
+  await submitCoreEval(atomOracle);
+  info = await vote(params);
+  console.log("Success", info);
 
-  submitCoreEval(auctioneer);
-  vote(params);
+  await submitCoreEval(auctioneer);
+  info = await vote(params);
+  console.log("Success", info);
 };
 
-main();
+deployContracts()
+  .then(() => {
+    console.log("Done");
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.log(err);
+    process.exit(1);
+  });

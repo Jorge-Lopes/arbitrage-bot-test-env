@@ -1,6 +1,7 @@
-import { publishContract } from "./commands_old.js";
+import "../installSesLockdown.js";
+import { publishContract } from "./commands.js";
 
-const main = () => {
+const installBundles = async () => {
   const params = {
     rpc: "http://0.0.0.0:26657",
     chain_id: "agoriclocal",
@@ -24,13 +25,34 @@ const main = () => {
   const bundleManifestPrice =
     "@/workspace/bundles/price-feed/b1-80e6fe68b299c82c2d26802c312bc37966a559f7b28f87d058887a79a9db48ad97da2240e71e3f98986071da8fc3c5d02358bec577b17a89cee2b1cb3cd23958.json";
 
-  publishContract(bundleContractAsset, params);
-  publishContract(bundleManifestAsset, params);
-  publishContract(bundleContractTimer, params);
-  publishContract(bundleManifestTimer, params);
-  publishContract(bundleContractAuctioneer, params);
-  publishContract(bundleManifestAuctioneer, params);
-  publishContract(bundleManifestPrice, params);
+  let info = await publishContract(bundleContractAsset, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleManifestAsset, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleContractTimer, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleManifestTimer, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleContractAuctioneer, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleManifestAuctioneer, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleManifestPrice, params);
+  console.log("Success", info);
 };
 
-main().then(() => console.log('Success')).catch(err => console.error(err));
+installBundles()
+  .then(() => {
+    console.log("Done");
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.log(err);
+    process.exit(1);
+  });

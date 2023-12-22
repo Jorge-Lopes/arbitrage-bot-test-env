@@ -1,9 +1,12 @@
 import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
-import { pollTx } from "../_agstate/yarn-links/agoric/src/lib/chain.js";
+import { pollTx } from "/usr/src/agoric-sdk/packages/agoric-cli/src/lib/chain.js";
 
 const agdBin = "agd";
+const agopsBin = "/usr/src/agoric-sdk/node_modules/.bin/agops";
+
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
 const chainConfig = {
   chainID: "agoriclocal",
   rpc: "http://localhost:26657",
@@ -23,7 +26,7 @@ const agd = {
         "proposals",
         "--node",
         rpc,
-        ...GLOBAL_OPTIONS,
+        "--output=json",
       ],
     },
   },
@@ -40,12 +43,10 @@ const agd = {
         params.key,
         "--chain-id",
         params.chain_id,
-        "--keyring-backend=test",
         "--gas",
         params.gas,
-        "-b block",
         "--yes",
-        ...[GLOBAL_OPTIONS],
+        ...GLOBAL_OPTIONS,
       ],
       walletAction: (offer, params) => [
         "tx",
@@ -88,9 +89,8 @@ const agd = {
         params.adjustment,
         "--gas",
         params.gas,
-        "-b block",
         "--yes",
-        ...[GLOBAL_OPTIONS],
+        ...GLOBAL_OPTIONS,
       ],
 
       vote: (proposal_id, params) => [
@@ -107,9 +107,8 @@ const agd = {
         params.adjustment,
         "--gas",
         params.gas,
-        "-b block",
         "--yes",
-        ...[GLOBAL_OPTIONS],
+        ...GLOBAL_OPTIONS,
       ],
     },
   },
