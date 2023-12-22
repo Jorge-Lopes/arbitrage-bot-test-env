@@ -6,7 +6,7 @@ const getManifestCall = harden([
   "getManifestForInitAssetFaucet",
   {
     contractRef: {
-      bundleID: "b1-1e841e43415f239d7cbe53850ffc32e8766ed5760657c289f9debc23445e0a32ed82d4e33a9ad53a0fbdf7ae21b4f0c5b06337a50f20422289f8531af186bba7",
+      bundleID: "b1-d945ef0f832f09296f0d3fb8f21c2df0deb1a52178a49fe0aad945384555bc510f7fa747ab9a2e0183d45c9e2088c51050fcfd6cb3c0ef040c90518f9b046ac1",
     },
   },
 ]);

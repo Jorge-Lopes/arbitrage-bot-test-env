@@ -28,9 +28,9 @@ const getManifestCall = harden([
       timeout: 10,
     },
     oracleAddresses: [
-      "agoric1uchs7t0yayzr6cjkuf7txy5yuptr7u89krpka4",
-      "agoric1z34vd482v3pa28gm23wwph7520nt3txrynfkmz",
-      "agoric1xapsvf7waxc92jc4y94zyrn4hn36pkxlvrrst7",
+      "agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx",
+      "agoric1aap7m84dt0rwhhfw49d4kv2gqetzl56vn8aaxj",
+      "agoric1h3jpwr2tawcc4ahlez45qepy5mnwdnlps55xvr",
     ],
   },
 ]);

@@ -1,101 +1,115 @@
 import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
-import { pollTx } from '../_agstate/yarn-links/agoric/src/lib/chain.js';
+import { pollTx } from "/usr/src/agoric-sdk/packages/agoric-cli/src/lib/chain.js";
 
 const agdBin = "agd";
-const sleep = ms => new Promise(res => setTimeout(res, ms));
+const agopsBin = "/usr/src/agoric-sdk/node_modules/.bin/agops";
+
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
 const chainConfig = {
-  chainID: 'agoriclocal',
-  rpc: 'http://localhost:26657'
+  chainID: "agoriclocal",
+  rpc: "http://localhost:26657",
 };
 
 const GLOBAL_OPTIONS = ["--keyring-backend=test", "--output=json"];
 
 const agd = {
   keys: {
-    add: (name) =>
-      ["keys", "add", name, "--recover", ...GLOBAL_OPTIONS],
+    add: (name) => ["keys", "add", name, "--recover", ...GLOBAL_OPTIONS],
   },
   query: {
     gov: {
-      proposals: (rpc) =>
-        [
-          "query",
-          "gov",
-          "proposals",
-          "--node",
-          rpc,
-          ...GLOBAL_OPTIONS,
-        ],
+      proposals: (rpc) => [
+        "query",
+        "gov",
+        "proposals",
+        "--node",
+        rpc,
+        "--output=json",
+      ],
     },
   },
   tx: {
     swingset: {
-      publish: (bundle, params) =>
-        [
-          "tx",
-          "swingset",
-          "install-bundle",
-          bundle,
-          "--node",
-          params.rpc,
-          "--from",
-          params.key,
-          "--chain-id",
-          params.chain_id,
-          "--keyring-backend=test",
-          "--gas",
-          params.gas,
-          "-b block",
-          "--yes",
-        ],
+      publish: (bundle, params) => [
+        "tx",
+        "swingset",
+        "install-bundle",
+        bundle,
+        "--node",
+        params.rpc,
+        "--from",
+        params.key,
+        "--chain-id",
+        params.chain_id,
+        "--gas",
+        params.gas,
+        "--yes",
+        ...GLOBAL_OPTIONS,
+      ],
+      walletAction: (offer, params) => [
+        "tx",
+        "swingset",
+        "wallet-action",
+        offer,
+        "--from",
+        params.key,
+        "--allow-spend",
+        "--node",
+        params.rpc,
+        "--chain-id",
+        params.chain_id,
+        "--gas",
+        params.gas,
+        "--yes",
+        "--fees=10000ubld",
+        "--gas-adjustment=1.2",
+        ...[GLOBAL_OPTIONS],
+      ],
     },
     gov: {
-      submit: (coreList, params) =>
-        [
-          "tx",
-          "gov",
-          "submit-proposal",
-          "swingset-core-eval",
-          ...coreList,
-          "--title",
-          params.title,
-          "--description",
-          params.description,
-          "--deposit",
-          params.deposit,
-          "--from",
-          params.key,
-          "--chain-id",
-          params.chain_id,
-          "--keyring-backend=test",
-          "--gas-adjustment",
-          params.adjustment,
-          "--gas",
-          params.gas,
-          "-b block",
-          "--yes",
-        ],
+      submit: (params) => [
+        "tx",
+        "gov",
+        "submit-proposal",
+        "swingset-core-eval",
+        ...params.coreEvalList,
+        "--title",
+        params.title,
+        "--description",
+        params.description,
+        "--deposit",
+        params.deposit,
+        "--from",
+        params.key,
+        "--chain-id",
+        params.chain_id,
+        "--gas-adjustment",
+        params.adjustment,
+        "--gas",
+        params.gas,
+        "--yes",
+        ...GLOBAL_OPTIONS,
+      ],
 
-      vote: (proposal_id, params) =>
-        [
-          "tx",
-          "gov",
-          "vote",
-          proposal_id,
-          "yes",
-          "--from",
-          params.key,
-          "--chain-id",
-          params.chain_id,
-          "--keyring-backend=test",
-          "--gas-adjustment",
-          params.adjustment,
-          "--gas",
-          params.gas,
-          "-b block",
-          "--yes",
-        ],
+      vote: (proposal_id, params) => [
+        "tx",
+        "gov",
+        "vote",
+        proposal_id,
+        "yes",
+        "--from",
+        params.key,
+        "--chain-id",
+        params.chain_id,
+        "--gas-adjustment",
+        params.adjustment,
+        "--gas",
+        params.gas,
+        "--yes",
+        ...GLOBAL_OPTIONS,
+      ],
     },
   },
 };
@@ -108,9 +122,9 @@ const sendTx = (args, options = {}) => {
   const tx = execFileSync(agdBin, args, { encoding: "utf-8", ...options });
   const { txhash } = JSON.parse(tx);
   return pollTx(txhash, {
-      execFileSync,
-      delay: sleep,
-      rpcAddrs: [chainConfig.rpc],
+    execFileSync,
+    delay: sleep,
+    rpcAddrs: [chainConfig.rpc],
   });
 };
 
@@ -129,25 +143,15 @@ const queryProposals = (rpc) => {
   return proposalsParse.proposals.slice(-1);
 };
 
-const spreadList = (list) => {
-  let result = [];
-  for (let item of list) {
-    let [permit, core_eval] = item;
-    result.push(permit, core_eval);
-  }
-  return result;
-};
-
 const publishContract = (bundle, params) => {
   console.log("Publish contract");
   console.log("Success");
   return sendTx(agd.tx.swingset.publish(bundle, params));
 };
 
-const submitCoreEval = (list, params) => {
+const submitCoreEval = (params) => {
   console.log("Submitting core-eval");
-  const coreList = spreadList(list);
-  return sendTx(agd.tx.gov.submit(coreList, params));
+  return sendTx(agd.tx.gov.submit(params));
 };
 
 const vote = (params) => {
@@ -157,6 +161,10 @@ const vote = (params) => {
   return sendTx(agd.tx.gov.vote(proposal_id, params));
 };
 
+const sendWalletAction = (offer, params) => {
+  return sendTx(agd.tx.swingset.walletAction(offer, params));
+};
+
 export {
   agd,
   execute,
@@ -164,4 +172,5 @@ export {
   publishContract,
   submitCoreEval,
   vote,
+  sendWalletAction,
 };
