@@ -1,4 +1,8 @@
-import { oracleSendOffer, oracleAccept, oraclePushPrice } from "./commands.js";
+import {
+  oracleSendOffer,
+  oracleAccept,
+  oraclePushPrice,
+} from "./commands_old.js";
 
 const main = async () => {
   const params = {
@@ -7,43 +11,41 @@ const main = async () => {
     oracleAdminAcceptOfferId: "1",
   };
 
-  const offerPath = "/workspace/scripts/";
-
   const oracleGov1 = {
     oracleIndex: "1",
     address: "agoric1mcm0ffsh0a20hlzgx5wylzw0sm85hxx05azsxx",
-    offerPath: `${offerPath}offer-${params.offerId}-oracle${oracleIndex}`,
-    pricePath: `${offerPath}price-offer-${params.offerId}-oracle${oracleIndex}`,
+    offerPath: `offer-${params.offerId}-oracle1.json`,
+    pricePath: `price-offer-${params.offerId}-oracle1.json`,
     ...params,
   };
 
   const oracleGov2 = {
-    oracleIndex: 2,
+    oracleIndex: "2",
     address: "agoric1aap7m84dt0rwhhfw49d4kv2gqetzl56vn8aaxj",
-    offerPath: `${offerPath}offer-${params.offerId}-oracle${oracleIndex}`,
-    pricePath: `${offerPath}price-offer-${params.offerId}-oracle${oracleIndex}`,
+    offerPath: `offer-${params.offerId}-oracle2.json`,
+    pricePath: `price-offer-${params.offerId}-oracle2.json`,
     ...params,
   };
 
   const oracleGov3 = {
-    oracleIndex: 3,
+    oracleIndex: "3",
     address: "agoric1h3jpwr2tawcc4ahlez45qepy5mnwdnlps55xvr",
-    offerPath: `${offerPath}offer-${params.offerId}-oracle${oracleIndex}`,
-    pricePath: `${offerPath}price-offer-${params.offerId}-oracle${oracleIndex}`,
+    offerPath: `offer-${params.offerId}-oracle3`,
+    pricePath: `price-offer-${params.offerId}-oracle3`,
     ...params,
   };
 
   oracleAccept(oracleGov1);
-  oracleSendOffer(oracleGov1.address, oracleGov1.offerPath);
+  oracleSendOffer({ address: oracleGov1.address, path: oracleGov1.offerPath });
 
-  oraclePushPrice({ price: 5, ...oracleGov1 });
-  oracleSendOffer(oracleGov2.address, oracleGov2.offerPath);
+  oraclePushPrice({ price: 50, ...oracleGov1 });
+  oracleSendOffer({ address: oracleGov1.address, path: oracleGov1.pricePath });
 
   oracleAccept(oracleGov2);
-  oracleSendOffer(oracleGov2.address, oracleGov2.pricePath);
+  oracleSendOffer({ address: oracleGov2.address, path: oracleGov2.offerPath });
 
-  oraclePushPrice({ price: 5, ...oracleGov2 });
-  oracleSendOffer(oracleGov2.address, oracleGov2.pricePath);
+  oraclePushPrice({ price: 50, ...oracleGov2 });
+  oracleSendOffer({ address: oracleGov2.address, path: oracleGov2.pricePath });
 };
 
 main();
