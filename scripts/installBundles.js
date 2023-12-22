@@ -22,8 +22,10 @@ const installBundles = async () => {
     "@/workspace/bundles/auctioneer/b1-a71e2df8c1d9c8eeadcf79bbbd3a25d84e6f10d1db0f5fce2bf705a625f6609f6a33ab8553f01565dd438cbfb4cd52be27b666d91900933908d2974cad32186b.json";
   const bundleManifestAuctioneer =
     "@/workspace/bundles/auctioneer/b1-6c696c6288f674a3844b15df0f1a3bbf4d270fdf7b484b0ef142c17040ced3170c46421c97fd7b6608719f7b0a1102b5888acd0b7a5d3c448d20b9291d62afe4.json";
-  const bundleManifestPrice =
-    "@/workspace/bundles/price-feed/b1-80e6fe68b299c82c2d26802c312bc37966a559f7b28f87d058887a79a9db48ad97da2240e71e3f98986071da8fc3c5d02358bec577b17a89cee2b1cb3cd23958.json";
+  const bundlePriceAggregator =
+    "@/workspace/bundles/price-feed/b1-18d599100b4a9f65827bc1a0bddbe3532e8061220074961587677d04a6f52abacb7c87a6b552102539b630af4184705cfb34b56e23de718e99d17591aeb87e40.json";
+  const bundleManifestPriceFeed =
+    "@/workspace/bundles/price-feed/b1-1f7685f4343148b6cde93f7e18f7fe0b92a6a8d380342151c43ece34c0f7696f273ed7aef750eebf187501e7300dabf9a0d7d809b950e5ca8085f34f041be7f0.json";
 
   let info = await publishContract(bundleContractAsset, params);
   console.log("Success", info);
@@ -43,7 +45,10 @@ const installBundles = async () => {
   info = await publishContract(bundleManifestAuctioneer, params);
   console.log("Success", info);
 
-  info = await publishContract(bundleManifestPrice, params);
+  info = await publishContract(bundlePriceAggregator, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleManifestPriceFeed, params);
   console.log("Success", info);
 };
 
