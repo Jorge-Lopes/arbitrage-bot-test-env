@@ -6,7 +6,7 @@ import { AmountMath } from "../_agstate/yarn-links/@agoric/ertp/src/index.js";
 
 const makeDeposit = async () => {
   const depositVal = process.env.DEPOSIT_VAL || 50_000_000n;
-  const networkConfig = 'https://xnet.agoric.net/network-config';
+  const networkConfig = 'https://wallet.agoric.app/wallet/network-config';
 
   const {
     chainWatcher: {
@@ -22,9 +22,11 @@ const makeDeposit = async () => {
 
   const collateralAmount = AmountMath.make(brands[CollateralKeyword], depositVal);
 
-  const info = await sendOffer(marshaller, Params, OfferSpecs.Deposit({
-    collateralAmount
-  }));
+  const info = await sendOffer(
+    marshaller,
+    { ...Params, key: 'liqGov1' },
+    OfferSpecs.Deposit({ collateralAmount })
+  );
 
   console.log('Success', info);
 };

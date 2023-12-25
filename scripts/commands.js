@@ -66,7 +66,7 @@ const agd = {
         "--yes",
         "--fees=10000ubld",
         "--gas-adjustment=1.2",
-        ...[GLOBAL_OPTIONS],
+        ...GLOBAL_OPTIONS,
       ],
       provisionOne: (params, address) => [
         "tx",

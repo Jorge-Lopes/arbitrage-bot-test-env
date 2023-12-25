@@ -83,7 +83,7 @@ const sendOffer = (marshaller, params, offerSpec) => {
     offer: offerSpec,
   };
 
-  const offer = JSON.stringify(marshaller.toCapData(spendAction));
+  const offer = JSON.stringify(marshaller.toCapData(harden(spendAction)));
   return sendWalletAction(offer, params);
 };
 harden(sendOffer);

@@ -1,0 +1,6 @@
+{
+  "consume": {
+    "fakeAuctioneerKit": true,
+    "agoricNames": true
+  }
+}
