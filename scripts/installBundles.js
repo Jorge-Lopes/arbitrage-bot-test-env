@@ -25,6 +25,9 @@ const installBundles = async () => {
   const bundleManifestPrice =
     "@/workspace/bundles/price-feed/b1-80e6fe68b299c82c2d26802c312bc37966a559f7b28f87d058887a79a9db48ad97da2240e71e3f98986071da8fc3c5d02358bec577b17a89cee2b1cb3cd23958.json";
 
+  const bundleManifestScaledPA =
+    "@/workspace/bundles/price-feed/b1-de5d5aaef00631dc65afd6237caa59f8ebfd516656a056b500d9c662d662daa661aba3f11d1b40d2f4f2092ce409db43188048a8720da0a6f73ad084994a60fe.json"
+
   let info = await publishContract(bundleContractAsset, params);
   console.log("Success", info);
 
@@ -44,6 +47,9 @@ const installBundles = async () => {
   console.log("Success", info);
 
   info = await publishContract(bundleManifestPrice, params);
+  console.log("Success", info);
+
+  info = await publishContract(bundleManifestScaledPA, params);
   console.log("Success", info);
 };
 

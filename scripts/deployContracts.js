@@ -51,18 +51,22 @@ const deployContracts = async () => {
     ...params,
   };
 
+  console.log("Deploying assetFaucet...");
   await submitCoreEval(assetFaucet);
   let info = await vote(params);
   console.log("Success", info);
 
+  console.log("Deploying manualTimer...");
   await submitCoreEval(manualTimer);
   info = await vote(params);
   console.log("Success", info);
 
+  console.log("Deploying atomOracle...");
   await submitCoreEval(atomOracle);
   info = await vote(params);
   console.log("Success", info);
 
+  console.log("Deploying auctioneer...");
   await submitCoreEval(auctioneer);
   info = await vote(params);
   console.log("Success", info);

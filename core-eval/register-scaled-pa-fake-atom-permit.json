@@ -1,0 +1,26 @@
+{
+  "consume": {
+    "agoricNamesAdmin": "makeCoreProposalBehavior",
+    "startUpgradable": true,
+    "priceAuthorityAdmin": true,
+    "priceAuthority": true,
+    "scaledPriceAuthorityKits": true,
+    "vatAdminSvc": "makeCoreProposalBehavior",
+    "zoe": "makeCoreProposalBehavior"
+  },
+  "produce": {
+    "scaledPriceAuthorityKits": true
+  },
+  "installation": {
+    "consume": {
+      "scaledPriceAuthority": true
+    },
+    "produce": "makeCoreProposalBehavior"
+  },
+  "evaluateBundleCap": "makeCoreProposalBehavior",
+  "modules": {
+    "utils": {
+      "runModuleBehaviors": "makeCoreProposalBehavior"
+    }
+  }
+}
