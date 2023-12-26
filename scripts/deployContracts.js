@@ -15,8 +15,8 @@ const deployContracts = async () => {
     title: "startAssetFaucet",
     description: "startAssetFaucet_core_eval",
     coreEvalList: [
-      "/workspace/core-eval/startAssetFaucet-permit.json",
-      "/workspace/core-eval/startAssetFaucet.js",
+      "./core-eval/startAssetFaucet-permit.json",
+      "./core-eval/startAssetFaucet.js",
     ],
     ...params,
   };
@@ -25,8 +25,8 @@ const deployContracts = async () => {
     title: "startManualTimerFaucet",
     description: "startManualTimerFaucet_core_eval",
     coreEvalList: [
-      "/workspace/core-eval/startManualTimerFaucet-permit.json",
-      "/workspace/core-eval/startManualTimerFaucet.js",
+      "./core-eval/startManualTimer-permit.json",
+      "./core-eval/startManualTimer.js",
     ],
     ...params,
   };
@@ -35,8 +35,8 @@ const deployContracts = async () => {
     title: "startFakeAtomOracle",
     description: "startFakeAtomOracle_core_eval",
     coreEvalList: [
-      "/workspace/core-eval/startFakeAtomOracle-permit.json",
-      "/workspace/core-eval/startFakeAtomOracle.js",
+      "./core-eval/startFakeAtomOracle-permit.json",
+      "./core-eval/startFakeAtomOracle.js",
     ],
     ...params,
   };
@@ -45,15 +45,15 @@ const deployContracts = async () => {
     title: "startAuctioneer",
     description: "startAuctioneer_core_eval",
     coreEvalList: [
-      "/workspace/core-eval/startAuctioneer-permit.json",
-      "/workspace/core-eval/startAuctioneer.js",
+      "./core-eval/startAuctioneer-permit.json",
+      "./core-eval/startAuctioneer.js",
     ],
     ...params,
   };
-
+  let info;
   console.log("Deploying assetFaucet...");
   await submitCoreEval(assetFaucet);
-  let info = await vote(params);
+  info = await vote(params);
   console.log("Success", info);
 
   console.log("Deploying manualTimer...");

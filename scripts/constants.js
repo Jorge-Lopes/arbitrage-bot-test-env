@@ -12,7 +12,7 @@ const Params = harden({
 const CollateralKeyword = "FakeATOM";
 const BidKeyword = "IST";
 const AuctioneerKeyword = "fakeAuctioneer";
-const TimerKeyword = "manualTimer";
+const TimerKeyword = "manualTimerInstanceNew";
 const AtomFaucetKeyword = "fakeATOMFaucet";
 
 export {

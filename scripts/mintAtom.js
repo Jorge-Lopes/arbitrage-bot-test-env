@@ -20,7 +20,7 @@ const mintAtom = async () => {
 
   const info = await sendOffer(
     marshaller,
-    { ...Params, key: 'liqGov1' },
+    { ...Params, key: 'user1' },
     OfferSpecs.MintAtom({
       amount: mintAmount,
     })

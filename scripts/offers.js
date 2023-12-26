@@ -56,7 +56,7 @@ const OfferSpecs = {
     invitationSpec: {
       source: "agoricContract",
       instancePath: [TimerKeyword],
-      callPipe: [["makeTimerInvitation"]],
+      callPipe: [["makeAdvanceTimeInvitation"]],
     },
     proposal: {},
     offerArgs: { timestamp },

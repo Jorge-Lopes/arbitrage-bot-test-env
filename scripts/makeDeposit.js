@@ -24,7 +24,7 @@ const makeDeposit = async () => {
 
   const info = await sendOffer(
     marshaller,
-    { ...Params, key: 'liqGov1' },
+    { ...Params, key: 'user1' },
     OfferSpecs.Deposit({ collateralAmount })
   );
 
