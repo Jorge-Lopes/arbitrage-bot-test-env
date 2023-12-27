@@ -7,8 +7,8 @@ const addBrand = async () => {
     title: "Add FakeATOM to auctioneer",
     description: "Add FakeATOM to auctioneer",
     coreEvalList: [
-      "/workspace/core-eval/addBrand-permit.json",
-      "/workspace/core-eval/addBrand.js",
+      "./core-eval/addBrand-permit.json",
+      "./core-eval/addBrand.js",
     ],
     ...Params,
   };

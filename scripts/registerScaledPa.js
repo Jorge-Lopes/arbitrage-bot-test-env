@@ -7,8 +7,8 @@ const registerScaledPA = async () => {
     title: "registerScaledPA",
     description: "registerScaledPA",
     coreEvalList: [
-      "/workspace/core-eval/register-scaled-pa-fake-atom-permit.json",
-      "/workspace/core-eval/register-scaled-pa-fake-atom.js",
+      "./core-eval/register-scaled-pa-fake-atom-permit.json",
+      "./core-eval/register-scaled-pa-fake-atom.js",
     ],
     ...Params,
   };
