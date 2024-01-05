@@ -56,7 +56,7 @@ const OfferSpecs = {
     invitationSpec: {
       source: "agoricContract",
       instancePath: [TimerKeyword],
-      callPipe: [["makeTimerInvitation"]],
+      callPipe: [["makeAdvanceTimeInvitation"]],
     },
     proposal: {},
     offerArgs: { timestamp },
@@ -83,7 +83,7 @@ const sendOffer = (marshaller, params, offerSpec) => {
     offer: offerSpec,
   };
 
-  const offer = JSON.stringify(marshaller.toCapData(spendAction));
+  const offer = JSON.stringify(marshaller.toCapData(harden(spendAction)));
   return sendWalletAction(offer, params);
 };
 harden(sendOffer);

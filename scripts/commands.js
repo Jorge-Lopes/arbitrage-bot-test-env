@@ -1,6 +1,6 @@
 import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
-import { pollTx } from "/usr/src/agoric-sdk/packages/agoric-cli/src/lib/chain.js";
+import { pollTx} from "../_agstate/yarn-links/agoric/src/lib/chain.js";
 
 const agdBin = "agd";
 const agopsBin = "/usr/src/agoric-sdk/node_modules/.bin/agops";
@@ -66,7 +66,7 @@ const agd = {
         "--yes",
         "--fees=10000ubld",
         "--gas-adjustment=1.2",
-        ...[GLOBAL_OPTIONS],
+        ...GLOBAL_OPTIONS,
       ],
       provisionOne: (params, address) => [
         "tx",

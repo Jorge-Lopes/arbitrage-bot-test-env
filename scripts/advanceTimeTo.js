@@ -5,7 +5,7 @@ import { Params } from "./constants.js";
 
 const advanceTimeTo = async () => {
   const timestamp = process.env.TIME || 1n;
-  const networkConfig = 'https://xnet.agoric.net/network-config';
+  const networkConfig = 'https://wallet.agoric.app/wallet/network-config';
 
   const {
     chainWatcher: {
@@ -18,9 +18,13 @@ const advanceTimeTo = async () => {
   watch();
   await getState(['instances']);
 
-  const info = await sendOffer(marshaller, Params, OfferSpecs.Timer({
-    timestamp
-  }));
+  const info = await sendOffer(
+    marshaller,
+    { ...Params, key: 'user1' },
+    OfferSpecs.Timer({
+      timestamp: BigInt(timestamp),
+    })
+  );
 
   console.log('Success', info);
 };

@@ -1,0 +1,29 @@
+{
+  "consume": {
+    "zoe": "zoe",
+    "agoricNamesAdmin": "makeCoreProposalBehavior",
+    "vatAdminSvc": "makeCoreProposalBehavior"
+  },
+  "produce": {
+    "manualTimerKit": true
+  },
+  "installation": {
+    "consume": {
+      "manualTimerInstallation": true
+    },
+    "produce": {
+      "manualTimerInstallation": true
+    }
+  },
+  "instance": {
+    "produce": {
+      "manualTimerInstanceNew": true
+    }
+  },
+  "evaluateBundleCap": "makeCoreProposalBehavior",
+  "modules": {
+    "utils": {
+      "runModuleBehaviors": "makeCoreProposalBehavior"
+    }
+  }
+}

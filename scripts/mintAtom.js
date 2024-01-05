@@ -5,8 +5,8 @@ import { CollateralKeyword, Params } from "./constants.js";
 import { AmountMath } from "../_agstate/yarn-links/@agoric/ertp/src/index.js";
 
 const mintAtom = async () => {
-  const mintVal = process.env.DEPOSIT_VAL || 50_000_000n;
-  const networkConfig = "https://xnet.agoric.net/network-config";
+  const mintVal = process.env.MINT_VAL || 50_000_000n;
+  const networkConfig = "https://wallet.agoric.app/wallet/network-config";
 
   const {
     chainWatcher: { watch, getState, marshaller },
@@ -16,13 +16,13 @@ const mintAtom = async () => {
   const { brands } = await getState(["brands"]);
   console.log({ brands });
 
-  const collateralAmount = AmountMath.make(brands[CollateralKeyword], mintVal);
+  const mintAmount = AmountMath.make(brands[CollateralKeyword], mintVal);
 
   const info = await sendOffer(
     marshaller,
-    Params,
+    { ...Params, key: 'user1' },
     OfferSpecs.MintAtom({
-      collateralAmount,
+      amount: mintAmount,
     })
   );
 

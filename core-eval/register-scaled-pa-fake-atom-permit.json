@@ -1,22 +1,21 @@
 {
   "consume": {
-    "zoe": "zoe",
     "agoricNamesAdmin": "makeCoreProposalBehavior",
-    "vatAdminSvc": "makeCoreProposalBehavior"
+    "startUpgradable": true,
+    "priceAuthorityAdmin": true,
+    "priceAuthority": true,
+    "scaledPriceAuthorityKits": true,
+    "vatAdminSvc": "makeCoreProposalBehavior",
+    "zoe": "makeCoreProposalBehavior"
   },
   "produce": {
-    "manualTimerFaucetKit": true
+    "scaledPriceAuthorityKits": true
   },
   "installation": {
     "consume": {
-      "manualTimerFaucetInstallation": true
+      "scaledPriceAuthority": true
     },
     "produce": "makeCoreProposalBehavior"
-  },
-  "instance": {
-    "produce": {
-      "manualTimerFaucetInstance": true
-    }
   },
   "evaluateBundleCap": "makeCoreProposalBehavior",
   "modules": {
