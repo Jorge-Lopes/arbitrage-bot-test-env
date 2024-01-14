@@ -5,7 +5,7 @@ import { CollateralKeyword, Params } from "./constants.js";
 import { AmountMath } from "../_agstate/yarn-links/@agoric/ertp/src/index.js";
 
 const makeDeposit = async () => {
-  const depositVal = process.env.DEPOSIT_VAL || 50_000_000n;
+  const depositVal = process.env.DEPOSIT_VAL || 50_000_000;
   const networkConfig = 'https://wallet.agoric.app/wallet/network-config';
 
   const {
@@ -20,12 +20,12 @@ const makeDeposit = async () => {
   const { brands } = await getState(['brands']);
   console.log({ brands });
 
-  const collateralAmount = AmountMath.make(brands[CollateralKeyword], depositVal);
+  const collateralAmount = AmountMath.make(brands[CollateralKeyword], BigInt(depositVal));
 
   const info = await sendOffer(
     marshaller,
     { ...Params, key: 'user1' },
-    OfferSpecs.Deposit({ collateralAmount })
+    OfferSpecs.Deposit({ collateralAmount, goal: process.env.GOAL_VAL ? AmountMath.make(brands['IST'], BigInt(process.env.GOAL_VAL)) : undefined })
   );
 
   console.log('Success', info);

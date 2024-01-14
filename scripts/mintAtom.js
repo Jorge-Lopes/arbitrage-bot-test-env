@@ -5,7 +5,7 @@ import { CollateralKeyword, Params } from "./constants.js";
 import { AmountMath } from "../_agstate/yarn-links/@agoric/ertp/src/index.js";
 
 const mintAtom = async () => {
-  const mintVal = process.env.MINT_VAL || 50_000_000n;
+  const mintVal = process.env.MINT_VAL || 500_000_000n;
   const networkConfig = "https://wallet.agoric.app/wallet/network-config";
 
   const {

@@ -20,7 +20,7 @@ const advanceTimeTo = async () => {
 
   const info = await sendOffer(
     marshaller,
-    { ...Params, key: 'user1' },
+    { ...Params, key: 'liqGov1' },
     OfferSpecs.Timer({
       timestamp: BigInt(timestamp),
     })

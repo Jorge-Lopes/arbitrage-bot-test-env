@@ -11,5 +11,8 @@
     "@agoric/internal": "dev",
     "@agoric/deploy-script-support": "dev",
     "@agoric/zoe": "dev"
+  },
+  "resolutions": {
+    "**/@agoric/xsnap": "0.14.3-dev-9f085d3.0"
   }
 }

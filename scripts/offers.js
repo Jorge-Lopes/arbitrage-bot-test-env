@@ -33,12 +33,12 @@ const OfferSpecs = {
         : {}),
     },
     offerArgs: {
-      exitOnBuy: true,
+      exitAfterBuy: true,
       maxBuy: maxColAmount,
       offerPrice: price,
     },
   }),
-  Deposit: ({ collateralAmount }) => ({
+  Deposit: ({ collateralAmount, goal = null }) => ({
     id: OFFER_ID.Deposit,
     invitationSpec: {
       source: "agoricContract",
@@ -50,6 +50,7 @@ const OfferSpecs = {
         Collateral: collateralAmount,
       },
     },
+    offerArgs: { ...(goal ? { goal } : {}) }
   }),
   Timer: ({ timestamp }) => ({
     id: OFFER_ID.Timer,
